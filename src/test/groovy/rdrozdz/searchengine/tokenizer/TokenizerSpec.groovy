@@ -65,7 +65,7 @@ class TokenizerSpec extends Specification {
             'the bRoWn fox jumped over ThE brown dog'  || of(t("the"), t("brown"), t("fox"), t("jumped"), t("over"), t("the"), t("brown"), t("dog"))
     }
 
-    private Token t(String input) {
+    private static Token t(String input) {
         return Token.of(input)
     }
 }
