@@ -1,13 +1,14 @@
 package rdrozdz.searchengine.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
 @Getter
+@EqualsAndHashCode
 public class DocumentTokens {
     private DocumentId documentId;
     private List<Token> tokens;

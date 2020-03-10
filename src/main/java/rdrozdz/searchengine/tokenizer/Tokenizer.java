@@ -1,6 +1,7 @@
 package rdrozdz.searchengine.tokenizer;
 
 import rdrozdz.searchengine.model.Document;
+import rdrozdz.searchengine.model.DocumentTokens;
 import rdrozdz.searchengine.model.Token;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public class Tokenizer {
         this.tokenSplitter = tokenSplitter;
     }
 
-    public List<Token> tokenize(Document document) {
-        return tokenSplitter
+    public DocumentTokens tokenize(Document document) {
+        List<Token> tokens = tokenSplitter
                 .split(document)
                 .stream()
                 .map(String::toLowerCase)
@@ -28,5 +29,6 @@ public class Tokenizer {
                 .map(Token::of)
                 .filter(NOT_EMPTY_TOKEN)
                 .collect(Collectors.toList());
+        return new DocumentTokens(document.getDocumentId(), tokens);
     }
 }

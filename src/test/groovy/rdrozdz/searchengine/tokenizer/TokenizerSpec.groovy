@@ -2,6 +2,7 @@ package rdrozdz.searchengine.tokenizer
 
 import rdrozdz.searchengine.model.Document
 import rdrozdz.searchengine.model.DocumentId
+import rdrozdz.searchengine.model.DocumentTokens
 import rdrozdz.searchengine.model.Token
 import spock.lang.Specification
 
@@ -19,50 +20,53 @@ class TokenizerSpec extends Specification {
 
     def 'should returns token representation of document'() {
         given:
-            def document = new Document(DOCUMENT_ID, input)
+        def document = new Document(DOCUMENT_ID, input)
 
         when:
-            def tokens = tokenizer.tokenize(document)
+        def documentTokens = tokenizer.tokenize(document)
 
         then:
-            tokens == output
+        documentTokens == output
+
         where:
-            input                                         || output
-            'the quick brown fox jumps over the lazy dog' || of(t("the"), t("quick"), t("brown"), t("fox"), t("jumps"), t("over"), t("the"), t("lazy"), t("dog"))
+        input                 || output
+        'the quick brown fox' || new DocumentTokens(DOCUMENT_ID, of(t("the"), t("quick"), t("brown"), t("fox")))
     }
 
     def 'should returns token representation of document with special characters'() {
         given:
-            def document = new Document(DOCUMENT_ID, input)
+        def document = new Document(DOCUMENT_ID, input)
 
         when:
-            def tokens = tokenizer.tokenize(document)
+        def documentTokens = tokenizer.tokenize(document)
 
         then:
-            tokens == output
+        documentTokens == output
+
         where:
-            input                                        || output
-            'the brown fox jumped over the brown dog.'   || of(t("the"), t("brown"), t("fox"), t("jumped"), t("over"), t("the"), t("brown"), t("dog"))
-            '!the red fox bit the lazy dog!'             || of(t("the"), t("red"), t("fox"), t("bit"), t("the"), t("lazy"), t("dog"))
-            'the brown fox jumped over the brown dog .'  || of(t("the"), t("brown"), t("fox"), t("jumped"), t("over"), t("the"), t("brown"), t("dog"))
-            'the brown fox! jumped over the brown dog .' || of(t("the"), t("brown"), t("fox"), t("jumped"), t("over"), t("the"), t("brown"), t("dog"))
+        input                 || output
+        'over the brown dog.' || new DocumentTokens(DOCUMENT_ID, of(t("over"), t("the"), t("brown"), t("dog")))
+        '!the lazy dog!'      || new DocumentTokens(DOCUMENT_ID, of(t("the"), t("lazy"), t("dog")))
+        'the brown dog .'     || new DocumentTokens(DOCUMENT_ID, of(t("the"), t("brown"), t("dog")))
+        'the fox! dog .'      || new DocumentTokens(DOCUMENT_ID, of(t("the"), t("fox"), t("dog")))
     }
 
     def 'should returns token representation of document when given upper case'() {
         given:
-            def document = new Document(DOCUMENT_ID, input)
+        def document = new Document(DOCUMENT_ID, input)
 
         when:
-            def tokens = tokenizer.tokenize(document)
+        def documentTokens = tokenizer.tokenize(document)
 
         then:
-            tokens == output
+        documentTokens == output
+
         where:
-            input                                      || output
-            'The brown fox Jumped over the brown dog.' || of(t("the"), t("brown"), t("fox"), t("jumped"), t("over"), t("the"), t("brown"), t("dog"))
-            'The Red Fox bit the lazy dog'             || of(t("the"), t("red"), t("fox"), t("bit"), t("the"), t("lazy"), t("dog"))
-            'the brown fox JUMPED over the brown dog'  || of(t("the"), t("brown"), t("fox"), t("jumped"), t("over"), t("the"), t("brown"), t("dog"))
-            'the bRoWn fox jumped over ThE brown dog'  || of(t("the"), t("brown"), t("fox"), t("jumped"), t("over"), t("the"), t("brown"), t("dog"))
+        input                                     || output
+        'The brown fox Jumped'                    || new DocumentTokens(DOCUMENT_ID, of(t("the"), t("brown"), t("fox"), t("jumped")))
+        'The Red Fox'                             || new DocumentTokens(DOCUMENT_ID, of(t("the"), t("red"), t("fox")))
+        'JUMPED over the brown dog'               || new DocumentTokens(DOCUMENT_ID, of(t("jumped"), t("over"), t("the"), t("brown"), t("dog")))
+        'the bRoWn fox JUMpeD over ThE brown dog' || new DocumentTokens(DOCUMENT_ID, of(t("the"), t("brown"), t("fox"), t("jumped"), t("over"), t("the"), t("brown"), t("dog")))
     }
 
     private static Token t(String input) {
