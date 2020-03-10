@@ -1,11 +1,13 @@
 package rdrozdz.searchengine.model;
 
 
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Getter
 public class Document {
 
     private static final Pattern SPECIAL_CHARACTERS = Pattern.compile("[.!@#$%&*()_+=|<>?{}\\[\\]~-]");
