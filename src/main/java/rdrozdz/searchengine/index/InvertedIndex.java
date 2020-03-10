@@ -4,9 +4,9 @@ import rdrozdz.searchengine.model.DocumentId;
 import rdrozdz.searchengine.model.DocumentTokens;
 import rdrozdz.searchengine.model.Term;
 
-import java.util.List;
+import java.util.Set;
 
 public interface InvertedIndex {
     void rebuild(DocumentTokens documentTokens);
-    List<DocumentId> find(Term term);
+    Set<DocumentId> find(Term term);
 }

@@ -1,10 +1,13 @@
 package rdrozdz.searchengine.index;
 
-import rdrozdz.searchengine.model.*;
+import rdrozdz.searchengine.model.DocumentId;
+import rdrozdz.searchengine.model.DocumentTokens;
+import rdrozdz.searchengine.model.Term;
+import rdrozdz.searchengine.model.Token;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RecordLevelInvertedIndex implements InvertedIndex {
@@ -34,7 +37,7 @@ public class RecordLevelInvertedIndex implements InvertedIndex {
     }
 
     @Override
-    public List<DocumentId> find(Term term) {
+    public Set<DocumentId> find(Term term) {
         Token token = termToToken(term);
         return this.index
                 .getOrDefault(token, Documents.EMPTY)
@@ -46,16 +49,16 @@ public class RecordLevelInvertedIndex implements InvertedIndex {
     }
 
     private static class Documents {
-        private static final Documents EMPTY = new Documents(List.of());
+        private static final Documents EMPTY = new Documents(Set.of());
 
-        private List<DocumentId> documentIds;
+        private Set<DocumentId> documentIds;
 
-        private Documents(List<DocumentId> documentIds) {
+        private Documents(Set<DocumentId> documentIds) {
             this.documentIds = documentIds;
         }
 
         public static Documents of(DocumentId documentId) {
-            List<DocumentId> documentIds = new ArrayList<>();
+            Set<DocumentId> documentIds = new HashSet<>();
             documentIds.add(documentId);
             return new Documents(documentIds);
         }

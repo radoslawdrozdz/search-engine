@@ -33,9 +33,9 @@ class RecordLevelInvertedIndexSpec extends Specification {
 
         where:
         term              || result
-        new Term("the")   || of(DOCUMENT_ID_1)
-        new Term("brown") || of(DOCUMENT_ID_1)
-        new Term("fox")   || of(DOCUMENT_ID_1)
+        new Term("the")   || Set.of(DOCUMENT_ID_1)
+        new Term("brown") || Set.of(DOCUMENT_ID_1)
+        new Term("fox")   || Set.of(DOCUMENT_ID_1)
     }
 
     def 'should return empty list when asking for not existing term'() {
@@ -43,7 +43,7 @@ class RecordLevelInvertedIndexSpec extends Specification {
         invertedIndex.rebuild(DOCUMENT_TOKENS_1)
 
         then:
-        invertedIndex.find(new Term("dog")) == of()
+        invertedIndex.find(new Term("dog")) == Set.of()
     }
 
     def 'should find all terms after rebuild index based on two documents'() {
@@ -56,11 +56,21 @@ class RecordLevelInvertedIndexSpec extends Specification {
 
         where:
         term              || result
-        new Term("the")   || of(DOCUMENT_ID_1, DOCUMENT_ID_2)
-        new Term("brown") || of(DOCUMENT_ID_1, DOCUMENT_ID_2)
-        new Term("fox")   || of(DOCUMENT_ID_1)
-        new Term("lazy")  || of(DOCUMENT_ID_2)
-        new Term("dog")   || of(DOCUMENT_ID_2)
+        new Term("the")   || Set.of(DOCUMENT_ID_1, DOCUMENT_ID_2)
+        new Term("brown") || Set.of(DOCUMENT_ID_1, DOCUMENT_ID_2)
+        new Term("fox")   || Set.of(DOCUMENT_ID_1)
+        new Term("lazy")  || Set.of(DOCUMENT_ID_2)
+        new Term("dog")   || Set.of(DOCUMENT_ID_2)
+    }
 
+    def 'should find only one document when given with two same worlds' (){
+        given:
+        def documentTokens = new DocumentTokens(DOCUMENT_ID_1, of(Token.of("the"), Token.of("the")))
+
+        when:
+        invertedIndex.rebuild(documentTokens)
+
+        then:
+        invertedIndex.find(new Term("the")) == Set.of(DOCUMENT_ID_1)
     }
 }
