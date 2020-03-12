@@ -11,4 +11,4 @@
 - curl http://localhost:8080/documents/search?term=fox
 
 ##To get all documents
-- curl http://localhost:8080/documents?term=fox
+- curl http://localhost:8080/documents
