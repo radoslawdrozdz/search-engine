@@ -1,9 +1,9 @@
 package rdrozdz.searchengine.tokenizer
 
 import rdrozdz.searchengine.model.Document
-import rdrozdz.searchengine.model.DocumentId
-import rdrozdz.searchengine.model.DocumentTokens
-import rdrozdz.searchengine.model.Token
+import rdrozdz.searchengine.model.vo.DocumentId
+import rdrozdz.searchengine.model.vo.DocumentTokens
+import rdrozdz.searchengine.model.vo.Token
 import spock.lang.Specification
 
 import static java.util.List.of
@@ -11,7 +11,7 @@ import static java.util.List.of
 
 class TokenizerSpec extends Specification {
 
-    private static final DocumentId DOCUMENT_ID = DocumentId.of(1);
+    private static final DocumentId DOCUMENT_ID = DocumentId.of('1');
 
 
     def wordCleaner = new WordCleaner()

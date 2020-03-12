@@ -1,4 +1,4 @@
-package rdrozdz.searchengine.model;
+package rdrozdz.searchengine.model.vo;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

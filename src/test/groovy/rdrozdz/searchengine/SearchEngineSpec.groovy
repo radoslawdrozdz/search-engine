@@ -1,29 +1,50 @@
 package rdrozdz.searchengine
 
-import spock.lang.Ignore
-import spock.lang.Specification
 
-import static rdrozdz.searchengine.SearchEngineFixture.*
+import rdrozdz.searchengine.index.IndexManager
+import rdrozdz.searchengine.index.IndexManagerImpl
+import rdrozdz.searchengine.index.RecordLevelInvertedIndex
+import rdrozdz.searchengine.index.TfIndexImpl
+import rdrozdz.searchengine.index.tfidf.TfIdfComputator
+import rdrozdz.searchengine.index.tfidf.TfIdfComputatorImpl
+import rdrozdz.searchengine.model.vo.DocumentId
+import rdrozdz.searchengine.model.vo.IndexEntryImpl
+import rdrozdz.searchengine.repository.DocumentRepository
+import rdrozdz.searchengine.repository.DocumentRepositoryImpl
+import rdrozdz.searchengine.tokenizer.SimpleTokenSplitter
+import rdrozdz.searchengine.tokenizer.TokenSplitter
+import rdrozdz.searchengine.tokenizer.Tokenizer
+import rdrozdz.searchengine.tokenizer.WordCleaner
+import spock.lang.Specification
 
 class SearchEngineSpec extends Specification {
 
-    def searchEngine = new SearchEngineImpl()
+    DocumentRepository repository = new DocumentRepositoryImpl()
 
-    @Ignore(value = "TODO")
-    def 'searching temrm'() {
-        given: 'applay document to search engine'
-        searchEngine.applay(DOCUMENTS)
+    WordCleaner wordCleaner = new WordCleaner()
+    TokenSplitter tokenSplitter = new SimpleTokenSplitter()
+    Tokenizer tokenizer = new Tokenizer(wordCleaner, tokenSplitter)
 
-        when: 'want to search term'
-        def result = searchEngine.search(searchTerm)
+    RecordLevelInvertedIndex invertedIndex = new RecordLevelInvertedIndex()
+    TfIndexImpl tfIndex = new TfIndexImpl()
+    TfIdfComputator tfIdfComputator = new TfIdfComputatorImpl(tfIndex, invertedIndex)
 
-        then: 'in result are expected document:'
-        result == expectedResult
+    IndexManager indexManager = new IndexManagerImpl(invertedIndex, tfIndex, tfIdfComputator, repository)
 
-        where:
-        searchTerm || expectedResult
-        BROWN      || List.of(DOCUMENT_1, DOCUMENT_3)
-        FOX        || List.of(DOCUMENT_3, DOCUMENT_1)
-        DOG        || List.of(DOCUMENT_3, DOCUMENT_1, DOCUMENT_2)
+    def subject = new SearchEngineImpl(repository, tokenizer, indexManager)
+
+    def 'should search given world supporting tfidf sorting' (){
+        given:
+        subject.indexDocument('1', 'the brown fox jumped over the brown dog')
+        subject.indexDocument('2', 'the lazy brown dog sat in the corner')
+        subject.indexDocument('3', 'the red fox bit the lazy dog')
+
+        expect:
+        subject.search('brown') == List.of(ie('1', 0.044), ie('2', 0.022) )
+        subject.search('fox') == List.of(ie('3', 0.025), ie('1', 0.022) )
+    }
+
+    static IndexEntryImpl ie(String id, double score) {
+        return new IndexEntryImpl(DocumentId.of(id), BigDecimal.valueOf(score))
     }
 }

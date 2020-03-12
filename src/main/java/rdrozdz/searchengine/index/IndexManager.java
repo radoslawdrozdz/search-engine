@@ -1,12 +1,13 @@
 package rdrozdz.searchengine.index;
 
-import rdrozdz.searchengine.model.vo.DocumentId;
+import com.findwise.IndexEntry;
 import rdrozdz.searchengine.model.vo.DocumentTokens;
 import rdrozdz.searchengine.model.vo.Term;
 
-import java.util.Set;
+import java.util.List;
 
-public interface InvertedIndex {
+public interface IndexManager {
     void rebuild(DocumentTokens documentTokens);
-    Set<DocumentId> find(Term term);
+
+    List<IndexEntry> search(Term searchTerm);
 }

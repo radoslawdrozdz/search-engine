@@ -3,7 +3,7 @@ package rdrozdz.searchengine.tokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class WordCleaner {
+public class WordCleaner {
     private static final Pattern SPECIAL_CHARACTERS = Pattern.compile("[.!@#$%&*()_+=|<>?{}\\[\\]~-]");
 
     String clean(String input) {

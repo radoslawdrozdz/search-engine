@@ -1,8 +1,8 @@
 package rdrozdz.searchengine.tokenizer;
 
 import rdrozdz.searchengine.model.Document;
-import rdrozdz.searchengine.model.DocumentTokens;
-import rdrozdz.searchengine.model.Token;
+import rdrozdz.searchengine.model.vo.DocumentTokens;
+import rdrozdz.searchengine.model.vo.Token;
 
 import java.util.List;
 import java.util.function.Predicate;

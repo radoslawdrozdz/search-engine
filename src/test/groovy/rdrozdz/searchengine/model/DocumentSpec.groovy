@@ -1,5 +1,6 @@
 package rdrozdz.searchengine.model
 
+import rdrozdz.searchengine.model.vo.DocumentId
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -7,7 +8,7 @@ import spock.lang.Unroll
 class DocumentSpec extends Specification {
 
     private static final String CORRECT_CONNTENT = 'The brown fox jumped over the brown dog.'
-    private static final DocumentId CORRECT_DOCUMENT_ID = DocumentId.of(1)
+    private static final DocumentId CORRECT_DOCUMENT_ID = DocumentId.of('1')
 
     @Unroll
     def 'should create Document with contents #content'() {

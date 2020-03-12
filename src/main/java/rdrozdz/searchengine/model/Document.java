@@ -3,6 +3,7 @@ package rdrozdz.searchengine.model;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import rdrozdz.searchengine.model.vo.DocumentId;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

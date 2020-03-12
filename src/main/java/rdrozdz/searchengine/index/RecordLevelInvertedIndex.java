@@ -1,16 +1,22 @@
 package rdrozdz.searchengine.index;
 
-import rdrozdz.searchengine.model.DocumentId;
-import rdrozdz.searchengine.model.DocumentTokens;
-import rdrozdz.searchengine.model.Term;
-import rdrozdz.searchengine.model.Token;
+import io.vavr.control.Try;
+import rdrozdz.searchengine.index.tfidf.IdfComputator;
+import rdrozdz.searchengine.model.vo.DocumentId;
+import rdrozdz.searchengine.model.vo.DocumentTokens;
+import rdrozdz.searchengine.model.vo.Term;
+import rdrozdz.searchengine.model.vo.Token;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RecordLevelInvertedIndex implements InvertedIndex {
+import static rdrozdz.searchengine.index.tfidf.TfIdfComputator.COMPUTATION_SCALE;
+
+public class RecordLevelInvertedIndex implements InvertedIndex, IdfComputator {
 
     private Map<Token, Documents> index = new ConcurrentHashMap<>();
 
@@ -46,6 +52,17 @@ public class RecordLevelInvertedIndex implements InvertedIndex {
 
     private Token termToToken(Term term) {
         return Token.of(term.getTerm());
+    }
+
+    @Override
+    public BigDecimal idfScore(Term term, double allDocumentsCount) {
+        Set<DocumentId> documentIds = find(term);
+        double foundInDocumentsCount = documentIds.size();
+        return Try.of(() -> allDocumentsCount / foundInDocumentsCount)
+                .mapTry(Math::log10)
+                .mapTry(BigDecimal::new)
+                .mapTry(bd -> bd.setScale(COMPUTATION_SCALE, RoundingMode.HALF_UP))
+                .getOrElse(BigDecimal.ZERO);
     }
 
     private static class Documents {

@@ -1,5 +1,6 @@
-package rdrozdz.searchengine.model
+package rdrozdz.searchengine.model.vo
 
+import rdrozdz.searchengine.model.vo.Term
 import spock.lang.Specification
 import spock.lang.Unroll
 
