@@ -12,20 +12,19 @@ public class Tokenizer {
 
     private static final Predicate<Token> NOT_EMPTY_TOKEN = t -> t != Token.EMPTY;
 
-    private WordCleaner wordCleaner;
+    private TokenCleaner tokenCleaner;
     private TokenSplitter tokenSplitter;
 
-    public Tokenizer(WordCleaner wordCleaner, TokenSplitter tokenSplitter) {
-        this.wordCleaner = wordCleaner;
+    public Tokenizer(TokenCleaner tokenCleaner, TokenSplitter tokenSplitter) {
+        this.tokenCleaner = tokenCleaner;
         this.tokenSplitter = tokenSplitter;
     }
 
     public DocumentTokens tokenize(Document document) {
         List<Token> tokens = tokenSplitter
                 .split(document)
-                .stream()
                 .map(String::toLowerCase)
-                .map(w -> wordCleaner.clean(w))
+                .map(w -> tokenCleaner.clean(w))
                 .map(Token::of)
                 .filter(NOT_EMPTY_TOKEN)
                 .collect(Collectors.toList());

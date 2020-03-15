@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static rdrozdz.searchengine.index.tfidf.TfIdfComputator.COMPUTATION_SCALE;
+import static rdrozdz.searchengine.utils.ComputationUtil.COMPUTATION_SCALE;
 
 public class RecordLevelInvertedIndex implements InvertedIndex, IdfComputator {
 
@@ -25,7 +25,7 @@ public class RecordLevelInvertedIndex implements InvertedIndex, IdfComputator {
         final DocumentId documentId = documentTokens.getDocumentId();
         documentTokens.getTokens().forEach(token -> {
             if (index.containsKey(token)) {
-                this.addDocuementId(token, documentId);
+                this.updateIndex(token, documentId);
             } else {
                 this.createIndex(token, documentId);
             }
@@ -37,7 +37,7 @@ public class RecordLevelInvertedIndex implements InvertedIndex, IdfComputator {
         index.put(token, documents);
     }
 
-    private void addDocuementId(Token token, DocumentId documentId) {
+    private void updateIndex(Token token, DocumentId documentId) {
         Documents documents = index.get(token);
         documents.addDocumentId(documentId);
     }

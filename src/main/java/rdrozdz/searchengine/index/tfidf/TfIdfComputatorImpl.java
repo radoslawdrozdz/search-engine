@@ -6,6 +6,8 @@ import rdrozdz.searchengine.model.vo.Term;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import static rdrozdz.searchengine.utils.ComputationUtil.COMPUTATION_SCALE;
+
 public class TfIdfComputatorImpl implements TfIdfComputator {
 
     private TfComputator tfComputator;
@@ -21,6 +23,6 @@ public class TfIdfComputatorImpl implements TfIdfComputator {
         BigDecimal tf = this.tfComputator.tfScore(term, documentId);
         BigDecimal idf = this.idfComputator.idfScore(term, allDocumentsCount);
         BigDecimal multiply = tf.multiply(idf);
-        return multiply.setScale(TfIdfComputator.COMPUTATION_SCALE, RoundingMode.HALF_UP);
+        return multiply.setScale(COMPUTATION_SCALE, RoundingMode.HALF_UP);
     }
 }

@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @RequestMapping("/documents")
 class DocumentsController {
 
-    private AtomicInteger atomicInteger = new AtomicInteger(1);
+    private DocumentIdSequence sequence = new DocumentIdSequence();
 
     private SearchEngine searchEngine;
     private DocumentRepository documentRepository;
@@ -30,16 +30,15 @@ class DocumentsController {
 
     @PostMapping
     ResponseEntity create(@RequestBody String content){
-        int id = atomicInteger.getAndIncrement();
-        String idAsString = String.valueOf(id);
-        searchEngine.indexDocument(idAsString, content);
-        URI location = createUri(idAsString);
+        String documentId = sequence.next();
+        searchEngine.indexDocument(documentId, content);
+        URI location = createdDocumentURI(documentId);
         return ResponseEntity.created(location).build();
     }
 
-    private URI createUri(String id) {
+    private URI createdDocumentURI(String documentId) {
         return MvcUriComponentsBuilder.fromMethodCall(
-                MvcUriComponentsBuilder.on(DocumentsController.class).get(id))
+                MvcUriComponentsBuilder.on(DocumentsController.class).get(documentId))
                 .build()
                 .toUri();
     }
@@ -52,7 +51,7 @@ class DocumentsController {
     }
 
     @GetMapping(value ="/search")
-    ResponseEntity find(@RequestParam(name = "term", required = false) String term){
+    ResponseEntity find(@RequestParam(name = "term") String term){
         List<IndexEntry> indexEntries = searchEngine.search(term);
         return ResponseEntity.ok(indexEntries);
     }
@@ -61,6 +60,16 @@ class DocumentsController {
     ResponseEntity getAll(){
         Collection<Document> all = documentRepository.findAll();
         return ResponseEntity.ok(all);
+    }
+
+    private static class DocumentIdSequence{
+
+        private AtomicInteger sequence = new AtomicInteger(0);
+
+        private String next() {
+            int nextId = sequence.incrementAndGet();
+            return String.valueOf(nextId);
+        }
     }
 
 }

@@ -2,16 +2,16 @@ package rdrozdz.searchengine.index;
 
 import com.findwise.IndexEntry;
 import rdrozdz.searchengine.index.tfidf.TfIdfComputator;
+import rdrozdz.searchengine.model.vo.DocumentId;
 import rdrozdz.searchengine.model.vo.DocumentTokens;
 import rdrozdz.searchengine.model.vo.IndexEntryImpl;
 import rdrozdz.searchengine.model.vo.Term;
 import rdrozdz.searchengine.repository.DocumentRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static rdrozdz.searchengine.model.vo.IndexEntryImpl.INDEX_ENTRY_COMPARATOR;
 
@@ -38,14 +38,19 @@ public class IndexManagerImpl implements IndexManager {
 
     @Override
     public List<IndexEntry> search(Term searchTerm) {
-        Set<IndexEntryImpl> result = new TreeSet<>(INDEX_ENTRY_COMPARATOR);
-        long allDocumentsCount = this.repository.allCount();
+        long numberOfAll = this.repository.numberOfAll();
 
-        invertedIndex.find(searchTerm)
-                .forEach(id -> {
-            BigDecimal tfidf = this.tfIdfComputator.tfidfScore(searchTerm, id, allDocumentsCount);
-            result.add(new IndexEntryImpl(id, tfidf));
-        });
-        return new ArrayList<>(result);
+        return invertedIndex.find(searchTerm)
+                .stream()
+                .map(mapToIndexEntry(searchTerm, numberOfAll))
+                .sorted(INDEX_ENTRY_COMPARATOR)
+                .collect(Collectors.toList());
+    }
+
+    private Function<DocumentId, IndexEntryImpl> mapToIndexEntry(Term searchTerm, long numberOfAll) {
+        return documentId -> {
+            BigDecimal tfidfScore = this.tfIdfComputator.tfidfScore(searchTerm, documentId, numberOfAll);
+            return new IndexEntryImpl(documentId, tfidfScore);
+        };
     }
 }

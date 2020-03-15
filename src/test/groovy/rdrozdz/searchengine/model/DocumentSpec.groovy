@@ -1,19 +1,19 @@
 package rdrozdz.searchengine.model
 
-import rdrozdz.searchengine.model.vo.DocumentId
+import rdrozdz.searchengine.model.exception.DocumentExceptions
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import static rdrozdz.searchengine.model.vo.DocumentIdFixture.DOCUMENT_1
 
 class DocumentSpec extends Specification {
 
     private static final String CORRECT_CONNTENT = 'The brown fox jumped over the brown dog.'
-    private static final DocumentId CORRECT_DOCUMENT_ID = DocumentId.of('1')
 
     @Unroll
     def 'should create Document with contents #content'() {
         when:
-            new Document(CORRECT_DOCUMENT_ID, content)
+            new Document(DOCUMENT_1, content)
         then:
             noExceptionThrown()
         where:
@@ -32,17 +32,17 @@ class DocumentSpec extends Specification {
 
     def 'should not create Document when content is null'() {
         when:
-            new Document(CORRECT_DOCUMENT_ID, null)
+            new Document(DOCUMENT_1, null)
         then:
-            def e = thrown(IllegalArgumentException)
+            def e = thrown(DocumentExceptions.DocumentCreationException)
             e.message == 'can not create Document with null content'
     }
 
     def 'should not create Document when content is empty'() {
         when:
-            new Document(CORRECT_DOCUMENT_ID, "")
+            new Document(DOCUMENT_1, "")
         then:
-            def e = thrown(IllegalArgumentException)
+            def e = thrown(DocumentExceptions.DocumentCreationException)
             e.message == 'can not create Document with empty content'
     }
 
@@ -50,15 +50,15 @@ class DocumentSpec extends Specification {
         when:
             new Document(null, CORRECT_CONNTENT)
         then:
-            def e = thrown(IllegalArgumentException)
+            def e = thrown(DocumentExceptions.DocumentCreationException)
             e.message == 'can not create Document with null documentId id'
     }
 
     def 'shoud not create Document when content has only white spaces'() {
         when:
-            new Document(CORRECT_DOCUMENT_ID, whietSpace)
+            new Document(DOCUMENT_1, whietSpace)
         then:
-            def e = thrown(IllegalArgumentException)
+            def e = thrown(DocumentExceptions.DocumentCreationException)
             e.message == 'can not create Document with only white spaces content'
 
         where:
@@ -73,9 +73,9 @@ class DocumentSpec extends Specification {
     @Unroll
     def 'shoud not create Document whne it contain only special character #specialCharacter'() {
         when:
-            new Document(CORRECT_DOCUMENT_ID, specialCharacter)
+            new Document(DOCUMENT_1, specialCharacter)
         then:
-            def e = thrown(IllegalArgumentException)
+            def e = thrown(DocumentExceptions.DocumentCreationException)
             e.message == 'can not create Document with only special characters content'
 
         where:

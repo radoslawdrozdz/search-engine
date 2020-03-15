@@ -5,8 +5,12 @@ import spock.lang.Specification
 
 class DocumentIdSpec extends Specification {
 
-    def 'two document id shoudul be equal' (){
+    def 'documentId should be equal' (){
         expect:
         DocumentId.of('1') == DocumentId.of('1')
+    }
+    def 'documentId should not be equal' (){
+        expect:
+        DocumentId.of('1') != DocumentId.of('2')
     }
 }

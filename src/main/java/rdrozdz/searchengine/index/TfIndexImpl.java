@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static rdrozdz.searchengine.index.tfidf.TfIdfComputator.COMPUTATION_SCALE;
+import static rdrozdz.searchengine.utils.ComputationUtil.COMPUTATION_SCALE;
 
 public class TfIndexImpl implements TfIndex, TfComputator {
 

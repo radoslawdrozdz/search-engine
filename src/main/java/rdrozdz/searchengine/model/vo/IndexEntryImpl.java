@@ -12,6 +12,7 @@ import java.util.Comparator;
 public class IndexEntryImpl implements IndexEntry {
 
     public static final Comparator<IndexEntry> INDEX_ENTRY_COMPARATOR = Comparator.comparing(IndexEntry::getScore).reversed();
+
     private DocumentId id;
     private BigDecimal score;
 

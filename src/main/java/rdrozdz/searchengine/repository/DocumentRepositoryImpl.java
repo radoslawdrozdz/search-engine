@@ -1,8 +1,8 @@
 package rdrozdz.searchengine.repository;
 
 import rdrozdz.searchengine.model.Document;
+import rdrozdz.searchengine.model.exception.DocumentExceptions.DocumentNotFoundExcpetion;
 import rdrozdz.searchengine.model.vo.DocumentId;
-import rdrozdz.searchengine.repository.exception.DocumentNotFoundExcpetion;
 
 import java.util.Collection;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class DocumentRepositoryImpl implements DocumentRepository {
     }
 
     @Override
-    public long allCount() {
+    public long numberOfAll() {
         return db.size();
     }
 

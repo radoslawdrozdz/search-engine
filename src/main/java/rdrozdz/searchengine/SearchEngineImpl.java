@@ -18,7 +18,9 @@ public class SearchEngineImpl implements SearchEngine {
     private Tokenizer tokenizer;
     private IndexManager indexManager;
 
-    public SearchEngineImpl(DocumentRepository documentRepository, Tokenizer tokenizer, IndexManager indexManager) {
+    public SearchEngineImpl(DocumentRepository documentRepository,
+                            Tokenizer tokenizer,
+                            IndexManager indexManager) {
         this.documentRepository = documentRepository;
         this.tokenizer = tokenizer;
         this.indexManager = indexManager;

@@ -2,8 +2,8 @@ package rdrozdz.searchengine.tokenizer;
 
 import rdrozdz.searchengine.model.Document;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface TokenSplitter {
-    List<String> split(Document document);
+    Stream<String> split(Document document);
 }

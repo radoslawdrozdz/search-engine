@@ -8,7 +8,7 @@ import java.util.Collection;
 public interface DocumentRepository {
     void save(Document document);
 
-    long allCount();
+    long numberOfAll();
 
     String find(DocumentId id);
 

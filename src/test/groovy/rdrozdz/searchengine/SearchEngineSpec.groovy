@@ -1,6 +1,5 @@
 package rdrozdz.searchengine
 
-
 import rdrozdz.searchengine.index.IndexManager
 import rdrozdz.searchengine.index.IndexManagerImpl
 import rdrozdz.searchengine.index.RecordLevelInvertedIndex
@@ -12,16 +11,16 @@ import rdrozdz.searchengine.model.vo.IndexEntryImpl
 import rdrozdz.searchengine.repository.DocumentRepository
 import rdrozdz.searchengine.repository.DocumentRepositoryImpl
 import rdrozdz.searchengine.tokenizer.SimpleTokenSplitter
+import rdrozdz.searchengine.tokenizer.TokenCleaner
 import rdrozdz.searchengine.tokenizer.TokenSplitter
 import rdrozdz.searchengine.tokenizer.Tokenizer
-import rdrozdz.searchengine.tokenizer.WordCleaner
 import spock.lang.Specification
 
 class SearchEngineSpec extends Specification {
 
     DocumentRepository repository = new DocumentRepositoryImpl()
 
-    WordCleaner wordCleaner = new WordCleaner()
+    TokenCleaner wordCleaner = new TokenCleaner()
     TokenSplitter tokenSplitter = new SimpleTokenSplitter()
     Tokenizer tokenizer = new Tokenizer(wordCleaner, tokenSplitter)
 

@@ -15,9 +15,9 @@ import rdrozdz.searchengine.index.tfidf.TfIdfComputatorImpl;
 import rdrozdz.searchengine.repository.DocumentRepository;
 import rdrozdz.searchengine.repository.DocumentRepositoryImpl;
 import rdrozdz.searchengine.tokenizer.SimpleTokenSplitter;
+import rdrozdz.searchengine.tokenizer.TokenCleaner;
 import rdrozdz.searchengine.tokenizer.TokenSplitter;
 import rdrozdz.searchengine.tokenizer.Tokenizer;
-import rdrozdz.searchengine.tokenizer.WordCleaner;
 
 @Configuration
 public class AppConfig {
@@ -29,9 +29,9 @@ public class AppConfig {
 
     @Bean
     SearchEngine searchEngine(DocumentRepository repository) {
-        WordCleaner wordCleaner = new WordCleaner();
+        TokenCleaner tokenCleaner = new TokenCleaner();
         TokenSplitter tokenSplitter = new SimpleTokenSplitter();
-        Tokenizer tokenizer = new Tokenizer(wordCleaner, tokenSplitter);
+        Tokenizer tokenizer = new Tokenizer(tokenCleaner, tokenSplitter);
 
         RecordLevelInvertedIndex recordLevelInvertedIndex = new RecordLevelInvertedIndex();
         TfIndexImpl tfIndex = new TfIndexImpl();

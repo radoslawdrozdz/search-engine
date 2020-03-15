@@ -3,15 +3,16 @@ package rdrozdz.searchengine.model.vo;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import rdrozdz.searchengine.model.exception.TermExceptions.InvalidTermException;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static rdrozdz.searchengine.utils.RegexpUtils.LETTER;
+import static rdrozdz.searchengine.utils.RegexpUtils.SPECIAL_CHARACTERS;
 
 @Getter
 @EqualsAndHashCode
 public class Term {
-    private static final Pattern SPECIAL_CHARACTERS = Pattern.compile("[!@#$%&*()_+=|<>?{}\\[\\]~-]");
-    private static final Pattern LETTER = Pattern.compile("[a-zA-z]");
 
     private String term;
 
@@ -23,16 +24,16 @@ public class Term {
     private static class TermValidator {
         private static String validate(String term) {
             if (term == null) {
-                throw new IllegalArgumentException("can not create Term with null content");
+                throw new InvalidTermException("can not create Term with null content");
             } else if (StringUtils.isEmpty(term)){
-                throw new IllegalArgumentException("can not create Term with empty content");
+                throw new InvalidTermException("can not create Term with empty content");
             } else if (StringUtils.isBlank(term)){
-                throw new IllegalArgumentException("can not create Term with blank content");
+                throw new InvalidTermException("can not create Term with blank content");
             }
             Matcher hasSpecial = SPECIAL_CHARACTERS.matcher(term);
             Matcher hasLetter = LETTER.matcher(term);
             if (hasSpecial.find() && !hasLetter.find()) {
-                throw new IllegalArgumentException("can not create Term with only specialCharacters content");
+                throw new InvalidTermException("can not create Term with only specialCharacters content");
             }
             return term;
         }

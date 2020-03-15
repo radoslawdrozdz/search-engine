@@ -1,10 +1,12 @@
 package rdrozdz.searchengine.index
 
-import rdrozdz.searchengine.model.vo.DocumentId
+
 import rdrozdz.searchengine.model.vo.Term
 import spock.lang.Specification
 
-import static rdrozdz.searchengine.index.IndexFixture.documentTokens
+import static rdrozdz.searchengine.model.vo.DocumentIdFixture.DOCUMENT_1
+import static rdrozdz.searchengine.model.vo.DocumentIdFixture.DOCUMENT_2
+import static rdrozdz.searchengine.model.vo.DocumentTokensFixture.documentTokens
 
 class TfComputatorSpec extends Specification {
 
@@ -12,18 +14,18 @@ class TfComputatorSpec extends Specification {
 
     def 'should compute tf for documents tokens' (){
         given:
-        def doc1 = documentTokens('1', 'a', 'this', 'is', 'a', 'sample')
-        def doc2 = documentTokens('2', 'this', 'is','example', 'another', 'another', 'example', 'example')
+        def doc1 = documentTokens(DOCUMENT_1, 'a', 'this', 'is', 'a', 'sample')
+        def doc2 = documentTokens(DOCUMENT_2, 'this', 'is','example', 'another', 'another', 'example', 'example')
 
-        when:
+        and:
         subject.rebuild(doc1)
         subject.rebuild(doc2)
 
-        then:
-        subject.tfScore(new Term('this'), DocumentId.of('1')) == 0.200
-        subject.tfScore(new Term('this'), DocumentId.of('2')) == 0.143
-        subject.tfScore(new Term('example'), DocumentId.of('1')) == 0
-        subject.tfScore(new Term('example'), DocumentId.of('2')) == 0.429
+        expect:
+        subject.tfScore(new Term('this'), DOCUMENT_1) == 0.200
+        subject.tfScore(new Term('this'), DOCUMENT_2) == 0.143
+        subject.tfScore(new Term('example'), DOCUMENT_1) == 0
+        subject.tfScore(new Term('example'), DOCUMENT_2) == 0.429
 
     }
 

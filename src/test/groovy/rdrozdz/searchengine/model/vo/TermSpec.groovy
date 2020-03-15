@@ -1,5 +1,6 @@
 package rdrozdz.searchengine.model.vo
 
+import rdrozdz.searchengine.model.exception.TermExceptions
 import rdrozdz.searchengine.model.vo.Term
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -34,7 +35,7 @@ class TermSpec extends Specification {
             new Term(illegalInput)
 
         then:
-            def e = thrown(IllegalArgumentException)
+            def e = thrown(TermExceptions.InvalidTermException)
             e.message == errMsq
 
         where:

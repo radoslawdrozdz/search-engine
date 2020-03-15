@@ -5,15 +5,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import rdrozdz.searchengine.repository.exception.DocumentNotFoundExcpetion;
+import rdrozdz.searchengine.model.exception.TermExceptions.InvalidTermException;
 
 @ControllerAdvice
-public class DocumentNotFoundAdvice {
+public class TermAdvice {
 
     @ResponseBody
-    @ExceptionHandler(DocumentNotFoundExcpetion.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    String employeeNotFoundHandler(DocumentNotFoundExcpetion ex) {
+    @ExceptionHandler(InvalidTermException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    String documentNotFoundHandler(InvalidTermException ex) {
         return ex.getMessage();
     }
 }
